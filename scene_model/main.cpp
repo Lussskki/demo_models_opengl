@@ -58,7 +58,7 @@ int main() {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Cube VAO/VBO setup 
-    float cubeVertices[] = { 
+    float cubeVertices[] = {
         -0.5f,-0.5f,-0.5f, 1,0,0,  0.5f,-0.5f,-0.5f, 0,1,0,  0.5f,0.5f,-0.5f, 0,0,1,
          0.5f,0.5f,-0.5f,0,0,1, -0.5f,0.5f,-0.5f,1,1,0, -0.5f,-0.5f,-0.5f,1,0,0,
         -0.5f,-0.5f,0.5f,1,0,1, 0.5f,-0.5f,0.5f,0,1,1, 0.5f,0.5f,0.5f,1,1,1,
@@ -109,7 +109,7 @@ int main() {
     glEnableVertexAttribArray(2);
     glBindVertexArray(0);
 
-    //  Load Cottage
+    // Load Cottage
     std::vector<Vertex> cottageVertices;
     GLuint cottageTexture;
     if (!loadOBJ("cottage/cottage_obj.obj", cottageVertices, cottageTexture))
@@ -130,14 +130,37 @@ int main() {
     glEnableVertexAttribArray(2);
     glBindVertexArray(0);
 
+    // Load Skull
+    std::vector<Vertex> skullVertices;
+    GLuint skullTexture;
+    if (!loadOBJ("skull/12140_Skull_v3_L2.obj", skullVertices, skullTexture))
+        std::cerr << "Failed to load Skull OBJ\n";
+
+    // Skull VAO/VBO setup 
+    GLuint VAO_skull, VBO_skull;
+    glGenVertexArrays(1, &VAO_skull);
+    glGenBuffers(1, &VBO_skull);
+    glBindVertexArray(VAO_skull);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_skull);
+    glBufferData(GL_ARRAY_BUFFER, skullVertices.size() * sizeof(Vertex), skullVertices.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Color));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+    glEnableVertexAttribArray(2);
+    glBindVertexArray(0);
+
     // Positions & Scale
     glm::vec3 cubePos = glm::vec3(-1.0f, 0.0f, -5.0f);
     glm::vec3 qilinPos = glm::vec3(1.0f, 0.2f, -5.0f);
     float qilinScale = 0.0005f;
 
     glm::vec3 cottagePos = glm::vec3(4.0f, 0.0f, -8.0f);
-    float cottageScale = 0.01f; 
+    float cottageScale = 0.01f;
 
+    glm::vec3 skullPos = glm::vec3(-4.0f, 0.5f, -6.0f);
+    float skullScale = 0.01f;
     float lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window)) {
@@ -155,7 +178,7 @@ int main() {
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
 
-        //  Draw Cube 
+        // Draw Cube 
         glm::mat4 modelCube = glm::translate(glm::mat4(1.0f), cubePos);
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(modelCube));
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
@@ -165,15 +188,12 @@ int main() {
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
 
-        //  Draw Lion
+        // Draw Lion
         glm::mat4 modelQilin = glm::translate(glm::mat4(1.0f), qilinPos);
-
         modelQilin = glm::rotate(modelQilin, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         modelQilin = glm::rotate(modelQilin, glm::radians(360.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         modelQilin = glm::rotate(modelQilin, glm::radians(-300.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-
         modelQilin = glm::scale(modelQilin, glm::vec3(qilinScale));
-
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(modelQilin));
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), qilinTexture != 0);
         if (qilinTexture != 0) {
@@ -181,16 +201,13 @@ int main() {
             glBindTexture(GL_TEXTURE_2D, qilinTexture);
             glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
         }
-
         glBindVertexArray(VAO_qilin);
         glDrawArrays(GL_TRIANGLES, 0, qilinVertices.size());
         glBindVertexArray(0);
 
-        //  Draw Cottage
+        // Draw Cottage
         glm::mat4 modelCottage = glm::translate(glm::mat4(1.0f), cottagePos);
-
         modelCottage = glm::scale(modelCottage, glm::vec3(cottageScale));
-
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(modelCottage));
         glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), cottageTexture != 0);
         if (cottageTexture != 0) {
@@ -198,11 +215,26 @@ int main() {
             glBindTexture(GL_TEXTURE_2D, cottageTexture);
             glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
         }
-
         glBindVertexArray(VAO_cottage);
         glDrawArrays(GL_TRIANGLES, 0, cottageVertices.size());
         glBindVertexArray(0);
 
+        // Draw Skull
+        glm::mat4 modelSkull = glm::translate(glm::mat4(1.0f), skullPos);
+        modelSkull = glm::rotate(modelSkull, glm::radians(-90.0f), glm::vec3(2.0f, 0.0f, 0.0f));
+        modelSkull = glm::rotate(modelSkull, glm::radians(360.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        
+        modelSkull = glm::scale(modelSkull, glm::vec3(skullScale));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(modelSkull));
+        glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), skullTexture != 0);
+        if (skullTexture != 0) {
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, skullTexture);
+            glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
+        }
+        glBindVertexArray(VAO_skull);
+        glDrawArrays(GL_TRIANGLES, 0, skullVertices.size());
+        glBindVertexArray(0);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -214,6 +246,8 @@ int main() {
     glDeleteBuffers(1, &VBO_qilin);
     glDeleteVertexArrays(1, &VAO_cottage);
     glDeleteBuffers(1, &VBO_cottage);
+    glDeleteVertexArrays(1, &VAO_skull);
+    glDeleteBuffers(1, &VBO_skull);
     glDeleteProgram(shaderProgram);
 
     glfwTerminate();
@@ -313,7 +347,7 @@ GLuint compileShader(GLenum type, const char* code) {
     if (!success) {
         glGetShaderInfoLog(shader, 512, nullptr, infoLog);
         std::cerr << "Shader compile error: " << infoLog << std::endl;
-    } 
+    }
     return shader;
 }
 
@@ -325,7 +359,7 @@ GLuint createShaderProgram(const char* vertexCode, const char* fragmentCode) {
     glAttachShader(program, fragmentShader);
     glLinkProgram(program);
     int success;
-    char infoLog[512]; 
+    char infoLog[512];
     glGetProgramiv(program, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(program, 512, nullptr, infoLog);
