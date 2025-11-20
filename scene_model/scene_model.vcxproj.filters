@@ -16,31 +16,15 @@
     <Filter Include="Resource Files\shaders">
       <UniqueIdentifier>{5f9fe38e-ea40-42e7-824d-b2b50eca228c}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="input_handler.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="input_handler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <Filter Include="Source Files\src">
+      <UniqueIdentifier>{d354a08e-cc53-45c5-854a-657cc3626059}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\src">
+      <UniqueIdentifier>{4380c85a-98ce-40fb-9e50-23fc445af072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\src\headers">
+      <UniqueIdentifier>{cd761842-d425-407b-a3e9-81258849472f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\shader.frag">
@@ -49,5 +33,33 @@
     <None Include="shaders\shader.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\camera.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\input_handler.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\headers\camera.h">
+      <Filter>Header Files\src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\input_handler.h">
+      <Filter>Header Files\src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\model.h">
+      <Filter>Header Files\src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\stb_image.h">
+      <Filter>Header Files\src\headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
