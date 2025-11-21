@@ -5,6 +5,7 @@
 
 ## Features
 - Load and render 3D OBJ models
+- Load and render Lambert lighting
 - Apply vertex and fragment shaders
 - Transform models with translation, rotation, and scaling
 - Basic camera control
@@ -64,6 +65,10 @@ Links:
 - [GLFW](https://www.glfw.org/documentation.html)
 - [GLM](https://github.com/g-truc/glm/releases/tag/1.0.2)
 - [TINYOBJLOADER](https://github.com/tinyobjloader/tinyobjloader/releases/tag/v1.0.6)
+
+## Screenshot of light and shadow
+![Front](Screenshots/light-front.png)
+![Back](Screenshots/light-back.png)
 
 ## How to link external libraries
 
