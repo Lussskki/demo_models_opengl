@@ -19,6 +19,7 @@
 #include "headers/camera.h"
 #include "headers/input_handler.h"
 
+#include "cube.h"
 
 #include <cstddef>
 
@@ -179,73 +180,8 @@ int main()
         });
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    float cubeVertices[] =
-    {
-        -0.5f,-0.5f,-0.5f,        1,0,0,
-         0.5f,-0.5f,-0.5f,        0,1,0,
-         0.5f, 0.5f,-0.5f,        0,0,1,
-         0.5f, 0.5f,-0.5f,        0,0,1,
-        -0.5f, 0.5f,-0.5f,        1,1,0,
-        -0.5f,-0.5f,-0.5f,        1,0,0,
+    Cube myCube(glm::vec3(-1.0f, 0.0f, -5.0f));
 
-        -0.5f,-0.5f, 0.5f,        1,0,1,
-         0.5f,-0.5f, 0.5f,        0,1,1,
-         0.5f, 0.5f, 0.5f,        1,1,1,
-         0.5f, 0.5f, 0.5f,        1,1,1,
-        -0.5f, 0.5f, 0.5f,        1,0,0,
-        -0.5f,-0.5f, 0.5f,        1,0,1,
-
-        -0.5f, 0.5f, 0.5f,        0,1,0,
-        -0.5f, 0.5f,-0.5f,        0,0,1,
-        -0.5f,-0.5f,-0.5f,        1,0,0,
-        -0.5f,-0.5f,-0.5f,        1,0,0,
-        -0.5f,-0.5f, 0.5f,        1,1,0,
-        -0.5f, 0.5f, 0.5f,        0,1,0,
-
-         0.5f, 0.5f, 0.5f,        1,0,1,
-         0.5f, 0.5f,-0.5f,        0,1,1,
-         0.5f,-0.5f,-0.5f,        0,0,1,
-         0.5f,-0.5f,-0.5f,        0,0,1,
-         0.5f,-0.5f, 0.5f,        1,1,1,
-         0.5f, 0.5f, 0.5f,        1,0,1,
-
-        -0.5f,-0.5f,-0.5f,        1,0,0,
-         0.5f,-0.5f,-0.5f,        0,1,0,
-         0.5f,-0.5f, 0.5f,        0,0,1,
-         0.5f,-0.5f, 0.5f,        0,0,1,
-        -0.5f,-0.5f, 0.5f,        1,1,0,
-        -0.5f,-0.5f,-0.5f,        1,0,0,
-
-        -0.5f, 0.5f,-0.5f,        0,1,1,
-         0.5f, 0.5f,-0.5f,        1,0,1,
-         0.5f, 0.5f, 0.5f,        0,1,0,
-         0.5f, 0.5f, 0.5f,        0,1,0,
-        -0.5f, 0.5f, 0.5f,        1,1,1,
-        -0.5f, 0.5f,-0.5f,        0,1,1
-    };
-
-    GLuint VAO_cube, VBO_cube;
-    glGenVertexArrays(1, &VAO_cube);
-    glGenBuffers(1, &VBO_cube);
-    glBindVertexArray(VAO_cube);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_cube);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
-
-    GLsizei cubeStride = 6 * sizeof(float);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, cubeStride, (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glDisableVertexAttribArray(1);
-    glVertexAttrib3f(1, 0.0f, 0.0f, 1.0f);
-
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, cubeStride, (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-
-    glDisableVertexAttribArray(3);
-    glVertexAttrib2f(3, 0.0f, 0.0f);
-
-    glBindVertexArray(0);
 
     std::string vertexCode = readFile("shaders/shader.vert");
     std::string fragmentCode = readFile("shaders/shader.frag");
@@ -450,14 +386,9 @@ int main()
         GLint locModel = glGetUniformLocation(shaderProgram, "model");
         GLint locUseTex = glGetUniformLocation(shaderProgram, "useTexture");
 
+        myCube.Draw(shaderProgram, locModel, locUseTex);
 
-        glm::mat4 modelCube = glm::translate(glm::mat4(1.0f), cubePos);
-        if (locModel >= 0) glUniformMatrix4fv(locModel, 1, GL_FALSE, glm::value_ptr(modelCube));
-        if (locUseTex >= 0) glUniform1i(locUseTex, GL_FALSE);
 
-        glBindVertexArray(VAO_cube);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
 
 
         if (VAO_tower)
@@ -569,8 +500,6 @@ int main()
         glfwPollEvents();
     }
 
-    glDeleteVertexArrays(1, &VAO_cube);
-    glDeleteBuffers(1, &VBO_cube);
 
     if (VAO_tower) { glDeleteVertexArrays(1, &VAO_tower); glDeleteBuffers(1, &VBO_tower); }
     if (VAO_qilin) { glDeleteVertexArrays(1, &VAO_qilin); glDeleteBuffers(1, &VBO_qilin); }
