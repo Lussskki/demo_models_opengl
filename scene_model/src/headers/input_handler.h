@@ -1,6 +1,6 @@
 #pragma once
 #include <GLFW/glfw3.h>
-#include "Camera.h"
+#include "camera.h"
 
 class InputHandler
 {
