@@ -46,24 +46,6 @@ void DebugCameraInfo(
     const glm::vec3& cottagePos, float cottageScale, float cottageRotationY,
     const glm::vec3& skullPos, float skullScale, float skullRotationY,
     const glm::vec3& towerPos, float towerScale, float towerRotationY
-);
-
-void PromptForNewPositions(
-    glm::vec3& cubePos,
-    glm::vec3& qilinPos, float& qilinScale, float& qilinRotationY,
-    glm::vec3& cottagePos, float& cottageScale, float& cottageRotationY,
-    glm::vec3& skullPos, float& skullScale, float& skullRotationY,
-    glm::vec3& towerPos, float& towerScale, float& towerRotationY
-);
-
-
-void DebugCameraInfo(
-    const Camera& camera,
-    const glm::vec3& cubePos,
-    const glm::vec3& qilinPos, float qilinScale, float qilinRotationY,
-    const glm::vec3& cottagePos, float cottageScale, float cottageRotationY,
-    const glm::vec3& skullPos, float skullScale, float skullRotationY,
-    const glm::vec3& towerPos, float towerScale, float towerRotationY
 )
 {
     glm::vec3 pos = camera.Position;
@@ -268,8 +250,6 @@ int main()
     std::string vertexCode = readFile("shaders/shader.vert");
     std::string fragmentCode = readFile("shaders/shader.frag");
 
-    std::cout << "Vertex size: " << vertexCode.size() << "\n";
-    std::cout << "Fragment size: " << fragmentCode.size() << "\n";
 
     GLuint shaderProgram = createShaderProgram(vertexCode.c_str(), fragmentCode.c_str());
 
