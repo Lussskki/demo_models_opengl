@@ -25,10 +25,12 @@
 #include "utils.h"
 #include "skull_model.h"
 #include "lion_model.h"
-#include "cottage_model.h"  
+#include "cottage_model.h"
+#include "tower_model.h" 
 
 const unsigned int SCR_WIDTH = 1000;
 const unsigned int SCR_HEIGHT = 400;
+
 
 std::string readFile(const std::string& path);
 GLuint loadTexture(const std::string& path);
@@ -38,6 +40,7 @@ GLuint createShaderProgram(const char* vertexCode, const char* fragmentCode);
 
 int main()
 {
+    // --- 1. GLFW Initialization ---
     if (!glfwInit()) return -1;
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -47,11 +50,13 @@ int main()
     if (!window) { glfwTerminate(); return -1; }
     glfwMakeContextCurrent(window);
 
+    // --- 2. GLEW Initialization ---
     glewExperimental = true;
     if (glewInit() != GLEW_OK) { std::cerr << "GLEW init failed\n"; return -1; }
 
     glEnable(GL_DEPTH_TEST);
 
+    // --- 3. Camera and Input Setup ---
     Camera camera;
     InputHandler input(&camera, SCR_WIDTH, SCR_HEIGHT);
     glfwSetWindowUserPointer(window, &input);
@@ -60,60 +65,37 @@ int main()
         });
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+    // --- 4. Shader Setup ---
     Cube cube(glm::vec3(-1.0f, 0.0f, -5.0f));
-
     std::string vertexCode = readFile("shaders/shader.vert");
     std::string fragmentCode = readFile("shaders/shader.frag");
     GLuint shaderProgram = createShaderProgram(vertexCode.c_str(), fragmentCode.c_str());
 
-    // ---------------- Load other models ----------------
-    std::vector<Vertex> towerVertices;
-    GLuint towerTexture;
-    if (!loadOBJ("models/watch-tower-made-of-wood/wood_watch_tower2.obj", towerVertices, towerTexture))
-        std::cerr << "Failed to load Tower OBJ\n";
+    // --- 5. Model Loading (Using TowerModel) ---
 
-    GLuint VAO_tower = 0, VBO_tower = 0;
-    if (!towerVertices.empty())
-    {
-        glGenVertexArrays(1, &VAO_tower);
-        glGenBuffers(1, &VBO_tower);
-        glBindVertexArray(VAO_tower);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO_tower);
-        glBufferData(GL_ARRAY_BUFFER, towerVertices.size() * sizeof(Vertex), towerVertices.data(), GL_STATIC_DRAW);
+    // Tower model (extracted to object)
+    TowerModel tower;
+    if (!tower.Load("models/watch-tower-made-of-wood/wood_watch_tower2.obj"))
+        std::cerr << "Failed to load Tower model\n";
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Position));
-        glEnableVertexAttribArray(0);
-
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
-        glEnableVertexAttribArray(1);
-
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Color));
-        glEnableVertexAttribArray(2);
-
-        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-        glEnableVertexAttribArray(3);
-
-        glBindVertexArray(0);
-    }
-
-    //  Lion model (extracted to object) 
+    // Lion model (extracted to object)
     LionModel qilin;
     if (!qilin.Load("models/qilin/qilin.obj")) {
         std::cerr << "Failed to load Qilin model\n";
     }
 
-    // Cottage model (extracted to object) 
+    // Cottage model (extracted to object)
     CottageModel cottage;
     if (!cottage.Load("models/cottage/cottage_obj.obj"))
         std::cerr << "Failed to load Cottage model\n";
 
-    //  Skull Model (extracted to object)
+    // Skull Model (extracted to object)
     SkullModel skull;
     if (!skull.Load("models/skull/12140_Skull_v3_L2.obj")) {
         std::cerr << "Failed to load Skull model\n";
     }
 
-    // ---------------- Other model positions ----------------
+    // --- 6. Model Positions and Settings ---
     glm::vec3 skullPos(-4.0f, 0.5f, -6.0f);
     float skullScale = 0.01f;
     float skullRotationY = 0.0f;
@@ -144,6 +126,7 @@ int main()
         float deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+        // --- 7. Input Processing ---
         input.ProcessKeyboard(window, deltaTime);
 
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
@@ -171,6 +154,7 @@ int main()
         }
         f1_pressed_last_frame = f1_currently_pressed;
 
+        // --- 8. Rendering Setup ---
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -179,6 +163,7 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
 
+        // Set Shader Uniforms
         GLint locLightPos = glGetUniformLocation(shaderProgram, "lightPos");
         if (locLightPos >= 0) glUniform3fv(locLightPos, 1, glm::value_ptr(lightPos));
         GLint locLightColor = glGetUniformLocation(shaderProgram, "lightColor");
@@ -190,54 +175,28 @@ int main()
         if (locView >= 0) glUniformMatrix4fv(locView, 1, GL_FALSE, glm::value_ptr(view));
         GLint locProj = glGetUniformLocation(shaderProgram, "projection");
         if (locProj >= 0) glUniformMatrix4fv(locProj, 1, GL_FALSE, glm::value_ptr(projection));
-        // locModel will be handled by each model's Draw
-        GLint locUseTex = glGetUniformLocation(shaderProgram, "useTexture");
+        GLint locUseTex = glGetUniformLocation(shaderProgram, "useTexture"); // Pass to Cube draw
 
-        // Draw models
-        cube.Draw(shaderProgram, locUseTex, locUseTex); // (keeps your original usage - adjust if needed)
+        // --- 9. Draw Models ---
 
-        if (VAO_tower)
-        {
-            glm::mat4 modelTower = glm::translate(glm::mat4(1.0f), towerPos);
-            modelTower = glm::rotate(modelTower, glm::radians(towerRotationY), glm::vec3(0.0f, 1.0f, 0.0f));
-            modelTower = glm::scale(modelTower, glm::vec3(towerScale));
-            GLint locModel = glGetUniformLocation(shaderProgram, "model");
-            if (locModel >= 0) glUniformMatrix4fv(locModel, 1, GL_FALSE, glm::value_ptr(modelTower));
+        // Draw Tower (using the class)
+        tower.Draw(shaderProgram, towerPos, towerScale, towerRotationY);
 
-            if (towerTexture != 0) {
-                if (locUseTex >= 0) glUniform1i(locUseTex, GL_TRUE);
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, towerTexture);
-                GLint texLoc = glGetUniformLocation(shaderProgram, "texture1");
-                if (texLoc >= 0) glUniform1i(texLoc, 0);
-            }
-            else {
-                if (locUseTex >= 0) glUniform1i(locUseTex, GL_FALSE);
-            }
-
-            glBindVertexArray(VAO_tower);
-            glDrawArrays(GL_TRIANGLES, 0, (GLsizei)towerVertices.size());
-            glBindVertexArray(0);
-        }
-        // Draw cube
+        // Draw Cube
         glm::mat4 modelCube = glm::translate(glm::mat4(1.0f), cubePos);
         GLint locModel = glGetUniformLocation(shaderProgram, "model");
         if (locModel >= 0) glUniformMatrix4fv(locModel, 1, GL_FALSE, glm::value_ptr(modelCube));
-
         cube.Draw(shaderProgram, locModel, locUseTex);
 
-        // Draw lion and skull 
+        // Draw other models
         cottage.Draw(shaderProgram, cottagePos, cottageScale, cottageRotationY);
         qilin.Draw(shaderProgram, qilinPos, qilinScale, qilinRotationY);
         skull.Draw(shaderProgram, skullPos, skullScale, skullRotationY);
 
+        // --- 10. End of Frame ---
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
-    // Cleanup
-    if (VAO_tower) { glDeleteVertexArrays(1, &VAO_tower); glDeleteBuffers(1, &VBO_tower); }
-
     glDeleteProgram(shaderProgram);
     glfwTerminate();
     return 0;
