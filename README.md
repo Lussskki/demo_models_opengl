@@ -57,10 +57,12 @@ scene_model/
 - GLM
 - TINYOBJLOADER
 
-In this repo i have these in External folder linked in vs22 ide, 
-but you need to download it and link.
+In GOOGLE link you can download external  link folder and paste in here, 
+it will work.
+
 
 Links:
+- [GOOGLE](https://drive.google.com/drive/folders/1a8rKdl8snLjJzEX8frAjxcgdycflZZFF?usp=sharing)
 - [GLEW](https://sourceforge.net/projects/glew/)
 - [GLFW](https://www.glfw.org/documentation.html)
 - [GLM](https://github.com/g-truc/glm/releases/tag/1.0.2)
