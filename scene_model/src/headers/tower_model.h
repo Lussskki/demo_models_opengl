@@ -3,31 +3,30 @@
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+
 #include <vector>
 #include <string>
 
-#include "model.h" // for Vertex
-#include "tiny_obj_loader.h" // <- NO IMPLEMENTATION HERE
-#include "stb_image.h"        // <- NO IMPLEMENTATION HERE
 
-class TowerModel
-{
+struct Vertex; 
+
+extern bool loadOBJ(const std::string& path, std::vector<Vertex>& outVertices, GLuint& outTexture);
+
+class TowerModel {
 public:
     TowerModel();
     ~TowerModel();
 
-    bool Load(const std::string& objPath, const std::string& texturePath = "");
-    void Draw(GLuint shaderProgram, const glm::vec3& position, float scale = 1.0f, float rotationY = 0.0f);
+    bool Load(const std::string& objPath);
+    void Draw(GLuint shaderProgram, const glm::vec3& position, float scale, float rotationY) const;
 
 private:
-    std::vector<Vertex> vertices;
-    GLuint texture;
-    GLuint VAO, VBO;
-
-    bool loadOBJ(const std::string& path);
-    GLuint loadTextureFromFile(const std::string& path);
+    std::vector<Vertex> m_vertices;
+    GLuint m_VAO;
+    GLuint m_VBO;
+    GLuint m_textureID;
+    TowerModel(const TowerModel&) = delete;
+    TowerModel& operator=(const TowerModel&) = delete;
 };
 
-#endif
+#endif 
