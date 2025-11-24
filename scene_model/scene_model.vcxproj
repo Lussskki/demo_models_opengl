@@ -142,9 +142,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\camera.cpp" />
+    <ClCompile Include="src\cottage_model.cpp" />
     <ClCompile Include="src\cube.cpp" />
     <ClCompile Include="src\debug_camera.cpp" />
     <ClCompile Include="src\input_handler.cpp" />
+    <ClCompile Include="src\lion_model.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model.cpp" />
     <ClCompile Include="src\skull_model.cpp" />
@@ -152,9 +154,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\camera.h" />
+    <ClInclude Include="src\headers\cottage_model.h" />
     <ClInclude Include="src\headers\cube.h" />
     <ClInclude Include="src\headers\debug_camera.h" />
     <ClInclude Include="src\headers\input_handler.h" />
+    <ClInclude Include="src\headers\lion_model.h" />
     <ClInclude Include="src\headers\model.h" />
     <ClInclude Include="src\headers\skull_model.h" />
     <ClInclude Include="src\headers\stb_image.h" />

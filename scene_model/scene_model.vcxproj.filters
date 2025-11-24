@@ -59,6 +59,12 @@
     <ClCompile Include="src\skull_model.cpp">
       <Filter>Source Files\src</Filter>
     </ClCompile>
+    <ClCompile Include="src\lion_model.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cottage_model.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\camera.h">
@@ -83,6 +89,12 @@
       <Filter>Header Files\src\headers</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\skull_model.h">
+      <Filter>Header Files\src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\lion_model.h">
+      <Filter>Header Files\src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\cottage_model.h">
       <Filter>Header Files\src\headers</Filter>
     </ClInclude>
   </ItemGroup>
