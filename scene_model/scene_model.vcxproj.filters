@@ -47,6 +47,18 @@
     <ClCompile Include="src\model.cpp">
       <Filter>Source Files\src</Filter>
     </ClCompile>
+    <ClCompile Include="src\cube.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\debug_camera.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\skull_model.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\camera.h">
@@ -59,6 +71,18 @@
       <Filter>Header Files\src\headers</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\stb_image.h">
+      <Filter>Header Files\src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\cube.h">
+      <Filter>Header Files\src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\debug_camera.h">
+      <Filter>Header Files\src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\utils.h">
+      <Filter>Header Files\src\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\skull_model.h">
       <Filter>Header Files\src\headers</Filter>
     </ClInclude>
   </ItemGroup>
