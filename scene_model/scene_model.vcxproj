@@ -150,6 +150,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model.cpp" />
     <ClCompile Include="src\skull_model.cpp" />
+    <ClCompile Include="src\tower_model.cpp" />
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +163,7 @@
     <ClInclude Include="src\headers\model.h" />
     <ClInclude Include="src\headers\skull_model.h" />
     <ClInclude Include="src\headers\stb_image.h" />
+    <ClInclude Include="src\headers\tower_model.h" />
     <ClInclude Include="src\headers\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
